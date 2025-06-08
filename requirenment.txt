@@ -1,4 +1,0 @@
-1. pandas – Dùng để xử lý và phân tích dữ liệu dạng bảng (CSV, Excel).
-
-2. matplotlib – Thư viện vẽ biểu đồ cơ bản (cột, đường, tròn...).
-
