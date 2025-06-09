@@ -12,14 +12,20 @@ Viết theo mô hình hướng đối tượng (OOP) bằng Python.
 ```
 my_project/
 ├── data/
-│   ├── raw/              # Dữ liệu thô (CSV gốc)
-│   └── processed/        # Dữ liệu đã xử lý
+│   ├── diem_thi_2020_2021/              # Dữ liệu thô (CSV gốc)
+│   └── diem_thi_2022
+|        diem_thi_2023
+|       diem_thi_2024     
 ├── notebooks/            # Các notebook thử nghiệm trực quan
-├── src/                  # Mã nguồn Python (chia theo lớp OOP)
-│   ├── data_loader.py
-│   ├── data_cleaner.py
-│   ├── data_splitter.py
-│   └── visualizer.py     # nếu làm công cụ khác thì không cần này
+├── Python Script/                  # Mã nguồn Python (chia theo lớp OOP)
+│   ├── data_cleaning_add_column_code_and_year_oop.ipynb
+│   ├── data_cleaning_check
+│   ├── data_cleaning_concat
+|   |---data_cleaning_drop_column
+|   |---data_cleaning_merge_table
+│   └── data_cleaning_removed_dup
+|   └── data_cleaning_read_csv
+|   └── final_data
 ├── main.py               # Tập tin chính chạy pipeline
 └── requirements.txt      # Các thư viện cần thiết
 ```
