@@ -6,11 +6,13 @@ file_list = [
     r'C:\FPT Polytechnic\Project Tự Làm\Điểm thi thpt 2020 - 2024\diem_thi_thpt_2023.csv',
     r'C:\FPT Polytechnic\Project Tự Làm\Điểm thi thpt 2020 - 2024\diem_thi_thpt_2024.csv' 
 ]
+df_danh_sach_hoi_dong_thi= pd.read_excel(r"C:\FPT Polytechnic\Project Tự Làm\Điểm thi thpt 2020 - 2024\danh_sach_hoi_dong_thi.xlsx")
 
 class NationalHighSchoolExamScore:
-    def __init__(self, file_paths):
+    def __init__(self, file_paths,df_danh_sach_hoi_dong_thi):
         self.file_paths = file_paths
         self.dataframes = []
+        self.danh_sach_hoi_dong_thi = df_danh_sach_hoi_dong_thi
 
     def read_data(self):
         for path in self.file_paths:
@@ -133,7 +135,7 @@ class NationalHighSchoolExamScore:
                 self.dataframes[i] = (path, df)
                 print(f"Successfully reordered columns for the file: {path}")
         
-    def concat_all(self, save_path="C:\FPT Polytechnic\Graduation_Project\Data\Processed\processe.csv"):
+    def concat_all(self, save_path="C:\FPT Polytechnic\Graduation_Project\Data\Processed\processed.csv"):
         if not self.dataframes:
             print("No data available to concatenate.")
             return None
@@ -152,7 +154,7 @@ class NationalHighSchoolExamScore:
 
 
 def main():
-    data = NationalHighSchoolExamScore(file_list)
+    data = NationalHighSchoolExamScore(file_list,df_danh_sach_hoi_dong_thi)
     data.read_data()
 
     data.check_data()
@@ -174,7 +176,7 @@ def main():
     data.add_column_code_year()
 
     data.check_data_column_year()
-    data.check_data()
+
     data.merge_table()
     columns_to_drop = {
     "2022": ["Mã hội đồng", "Tên hội đồng thi", "code"],
@@ -192,6 +194,18 @@ def main():
     data.reorder_all_columns()
     data.check_data()
     data.concat_all()
+
+    df_danh_sach_hoi_dong_thi.info()
+    df_danh_sach_hoi_dong_thi.rename(columns={
+    "Mã hội đồng": "code",
+    "Tên hội đồng thi": "national examination board",
+    "Tên Tỉnh": "province"
+    }, inplace=True)
+
+    df_danh_sach_hoi_dong_thi.to_csv(r"C:\FPT Polytechnic\Graduation_Project\Data\Processed\danh_sach_hoi_dong_thi_transform.csv", index=False)
+    df_danh_sach_hoi_dong_thi_transform = pd.read_csv(r"C:\FPT Polytechnic\Graduation_Project\Data\Processed\danh_sach_hoi_dong_thi_transform.csv")
+    df_danh_sach_hoi_dong_thi_transform.info()
+
 
 
 if __name__ == "__main__":
