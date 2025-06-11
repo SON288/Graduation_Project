@@ -122,7 +122,7 @@ class NationalHighSchoolExamScore:
             desired_order = [
                 'sbd', 'toan', 'ngu_van', 'vat_li', 'hoa_hoc', 'sinh_hoc',
                 'lich_su', 'dia_li', 'gdcd', 'ngoai_ngu',
-                'year', 'code', 'province'
+                'year', 'province'
             ]
 
             for i, (path, df) in enumerate(self.dataframes):
@@ -133,7 +133,7 @@ class NationalHighSchoolExamScore:
                 self.dataframes[i] = (path, df)
                 print(f"Successfully reordered columns for the file: {path}")
         
-    def concat_all(self, save_path="C:\FPT Polytechnic\Graduation_Project\Data\Processed\processed.csv"):
+    def concat_all(self, save_path="C:\FPT Polytechnic\Graduation_Project\Data\Processed\processe.csv"):
         if not self.dataframes:
             print("No data available to concatenate.")
             return None
@@ -154,13 +154,46 @@ class NationalHighSchoolExamScore:
 def main():
     data = NationalHighSchoolExamScore(file_list)
     data.read_data()
+
     data.check_data()
+
     data.remove_duplicate()
+
+    columns_to_drop = {
+    "2020_2021": ["Tên", "Ngày Sinh", "Giới tính"],
+    "2023": ["ma_ngoai_ngu"],
+    "2024": ["ma_ngoai_ngu"]
+    }
+    data.drop_specific_columns(columns_to_drop)
+
+    data.rename_columns({
+    "2020_2021": {"SBD": "sbd", "Toán": "toan", "Văn": "ngu_van", "Ngoại Ngữ": "ngoai_ngu", "Lý": "vat_li", "Hoá": "hoa_hoc", 
+                  "Sinh": "sinh_hoc", "Lịch Sử": "lich_su", "Địa Lý": "dia_li", "GDCD": "gdcd", "Year": "year"}
+    })
+
     data.add_column_code_year()
+
     data.check_data_column_year()
+    data.check_data()
     data.merge_table()
+    columns_to_drop = {
+    "2022": ["Mã hội đồng", "Tên hội đồng thi", "code"],
+    "2023": ["Mã hội đồng", "Tên hội đồng thi", "code"],
+    "2024": ["Mã hội đồng", "Tên hội đồng thi", "code"]
+    }
+    data.drop_specific_columns(columns_to_drop)
+    data.check_data()
+    data.rename_columns({
+    "2022": {"Tên Tỉnh": "province"},
+    "2023": {"Tên Tỉnh": "province"},
+    "2024": {"Tên Tỉnh": "province"}
+
+    })
     data.reorder_all_columns()
+    data.check_data()
     data.concat_all()
+
 
 if __name__ == "__main__":
     main()
+
