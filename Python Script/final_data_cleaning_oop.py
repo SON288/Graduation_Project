@@ -6,13 +6,13 @@ file_list = [
     r'C:\FPT Polytechnic\Project Tự Làm\Điểm thi thpt 2020 - 2024\diem_thi_thpt_2023.csv',
     r'C:\FPT Polytechnic\Project Tự Làm\Điểm thi thpt 2020 - 2024\diem_thi_thpt_2024.csv' 
 ]
-df_danh_sach_hoi_dong_thi= pd.read_excel(r"C:\FPT Polytechnic\Project Tự Làm\Điểm thi thpt 2020 - 2024\danh_sach_hoi_dong_thi.xlsx")
+df_national_examination_board = pd.read_excel(r"C:\FPT Polytechnic\Project Tự Làm\Điểm thi thpt 2020 - 2024\danh_sach_hoi_dong_thi.xlsx")
 
 class NationalHighSchoolExamScore:
-    def __init__(self, file_paths,df_danh_sach_hoi_dong_thi):
+    def __init__(self, file_paths,df_national_examination_board):
         self.file_paths = file_paths
         self.dataframes = []
-        self.danh_sach_hoi_dong_thi = df_danh_sach_hoi_dong_thi
+        self.df_national_examination_board = df_national_examination_board
 
     def read_data(self):
         for path in self.file_paths:
@@ -105,17 +105,6 @@ class NationalHighSchoolExamScore:
         for path, df in self.dataframes:
             print(df["year"].unique())
 
-    def merge_table(self):
-        df_danh_sạch_hoi_dong_thi = pd.read_excel(r"C:\FPT Polytechnic\Project Tự Làm\Điểm thi thpt 2020 - 2024\danh_sach_hoi_dong_thi.xlsx")
-        if not self.dataframes:
-            print("No data to process")
-            return
-        
-        for i, (path, df) in enumerate(self.dataframes):
-            if 'province' not in df.columns:
-                 df_merged = pd.merge(df, df_danh_sạch_hoi_dong_thi, left_on='code', right_on='Mã hội đồng', how='left')
-                 self.dataframes[i] = (path, df_merged)
-
     def reorder_all_columns(self):
             if not self.dataframes:
                 print("No data to process.")
@@ -123,8 +112,7 @@ class NationalHighSchoolExamScore:
 
             desired_order = [
                 'sbd', 'toan', 'ngu_van', 'vat_li', 'hoa_hoc', 'sinh_hoc',
-                'lich_su', 'dia_li', 'gdcd', 'ngoai_ngu',
-                'year', 'province'
+                'lich_su', 'dia_li', 'gdcd', 'ngoai_ngu','code','year'
             ]
 
             for i, (path, df) in enumerate(self.dataframes):
@@ -142,11 +130,11 @@ class NationalHighSchoolExamScore:
 
         try:
             all_dfs = [df for _, df in self.dataframes]
-            df_concat = pd.concat(all_dfs, ignore_index=True)
-            df_concat.to_csv(save_path, index=False, encoding='utf-8-sig')
+            df_national_high_school_exam_score = pd.concat(all_dfs, ignore_index=True)
+            df_national_high_school_exam_score.to_csv(save_path, index=False, encoding='utf-8-sig')
             print(f"Successfully concatenated {len(all_dfs)} DataFrames.")
             print(f"File saved to: {save_path}")
-            return df_concat
+            return df_national_high_school_exam_score
         except Exception as e:
             print(f"Error during concatenation: {e}")
             return None
@@ -154,7 +142,7 @@ class NationalHighSchoolExamScore:
 
 
 def main():
-    data = NationalHighSchoolExamScore(file_list,df_danh_sach_hoi_dong_thi)
+    data = NationalHighSchoolExamScore(file_list,df_national_examination_board)
     data.read_data()
 
     data.check_data()
@@ -176,35 +164,25 @@ def main():
     data.add_column_code_year()
 
     data.check_data_column_year()
-
-    data.merge_table()
-    columns_to_drop = {
-    "2022": ["Mã hội đồng", "Tên hội đồng thi", "code"],
-    "2023": ["Mã hội đồng", "Tên hội đồng thi", "code"],
-    "2024": ["Mã hội đồng", "Tên hội đồng thi", "code"]
-    }
-    data.drop_specific_columns(columns_to_drop)
-    data.check_data()
-    data.rename_columns({
-    "2022": {"Tên Tỉnh": "province"},
-    "2023": {"Tên Tỉnh": "province"},
-    "2024": {"Tên Tỉnh": "province"}
-
+    data.drop_specific_columns({
+    "2020_2021": ["province"]
     })
+
     data.reorder_all_columns()
     data.check_data()
-    data.concat_all()
+    df_national_high_school_exam_score = data.concat_all()
 
-    df_danh_sach_hoi_dong_thi.info()
-    df_danh_sach_hoi_dong_thi.rename(columns={
+    df_national_examination_board.info()
+    df_national_examination_board.rename(columns={
     "Mã hội đồng": "code",
     "Tên hội đồng thi": "national examination board",
     "Tên Tỉnh": "province"
     }, inplace=True)
 
-    df_danh_sach_hoi_dong_thi.to_csv(r"C:\FPT Polytechnic\Graduation_Project\Data\Processed\danh_sach_hoi_dong_thi_transform.csv", index=False)
-    df_danh_sach_hoi_dong_thi_transform = pd.read_csv(r"C:\FPT Polytechnic\Graduation_Project\Data\Processed\danh_sach_hoi_dong_thi_transform.csv")
-    df_danh_sach_hoi_dong_thi_transform.info()
+    df_national_examination_board.to_csv(r"C:\FPT Polytechnic\Graduation_Project\Data\Processed\national_examination_board_transform.csv", index=False)
+    df_national_examination_board_transform = pd.read_csv(r"C:\FPT Polytechnic\Graduation_Project\Data\Processed\national_examination_board_transform.csv")
+    df_national_examination_board_transform.info()
+    df_national_high_school_exam_score.info()
 
 
 
