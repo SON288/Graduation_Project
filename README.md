@@ -1,5 +1,6 @@
 # <u>**Graduation Project: National High School Exam Score (FPT Polytechnic)**</u>
 ## <u>**Introduction**</u>
+## <u>**Project Structure**</u>
 ## <u>**Data Processing**</u>
 ### <u>**Data Cleaning**</u>
 ### <u>**Data Modeling**</u>
